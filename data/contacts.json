@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Adam Ognjanovi\u0107",
+    "email": "adam.ognjanovic@example.com",
+    "phone": "010-4304-384",
+    "company": "Po\u017earevac"
+  },
+  {
+    "name": "Carmine Niehoff",
+    "email": "carmine.niehoff@example.com",
+    "phone": "0157-8647863",
+    "company": "Selb"
+  },
+  {
+    "name": "\u00c9dina Viana",
+    "email": "edina.viana@example.com",
+    "phone": "(87) 0764-6805",
+    "company": "S\u00e3o Jos\u00e9 dos Campos"
+  },
+  {
+    "name": "Onni Laurila",
+    "email": "onni.laurila@example.com",
+    "phone": "07-375-001",
+    "company": "Pyh\u00e4nt\u00e4"
+  },
+  {
+    "name": "Phoenix Johnson",
+    "email": "phoenix.johnson@example.com",
+    "phone": "(222)-920-1682",
+    "company": "Hastings"
+  }
+]
