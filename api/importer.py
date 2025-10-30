@@ -13,14 +13,15 @@ def fetch_random_users(n=5):
         email = user['email']
         phone = user['phone']
         company = user['location']['city']  # Using city as a placeholder for company
-        contacts.append(Contact(name, email, phone, company))
+        contact = Contact(name, email, phone, company)
+        contacts.append(contact)
     return contacts
 
-def save_data(contacts, filename='data/contacts.json'):
-    with open(filename, 'w') as f:
-        json.dump([c.to_dict() for c in contacts], f, indent=2)
+# def save_data(contacts, filename='data/contacts.json'):
+#     with open(filename, 'w') as f:
+#        json.dump([c.to_dict() for c in contacts], f, indent=2)
 
-if __name__ == '__main__':
-    contacts = fetch_random_users()
-    save_data(contacts)
-    print(f"Saved {len(contacts)} contacts to data/contacts.json")
+# if __name__ == '__main__':
+#     contacts = fetch_random_users()
+#     save_data(contacts)
+#     print(f"Saved {len(contacts)} contacts to data/contacts.json")
