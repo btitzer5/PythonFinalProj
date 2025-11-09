@@ -30,7 +30,7 @@ def import_records(users = 5, filename='data/contacts.json'):
     new_contacts = importer.fetch_random_users(users)
     # If new_contacts are already dicts, don't call .to_dict()
     if hasattr(new_contacts[0], 'to_dict'):
-        new_contacts = [c.to_dict() for c in new_contacts]
+        new_contacts = [c.to_dict() for c in new_contacts if hasattr(c, 'to_dict')]
     store.save_json(data + new_contacts, filename)
     print(f"Imported {len(new_contacts)} records into {filename}")
 

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 from core import ops
 from models.contact import Contact
+from core import analysis
 
 class CRMApp(tk.Tk):
     def __init__(self):
@@ -59,14 +60,17 @@ class CRMApp(tk.Tk):
         ttk.Button(btn_frame, text="Delete Selected", command=self.delete_selected).pack(side=tk.LEFT, padx=8, pady=2)
         ttk.Button(btn_frame, text="Clear All", command=self.clear).pack(side=tk.LEFT, padx=8, pady=2)
         ttk.Button(btn_frame, text="Refresh", command=self.refresh_contacts).pack(side=tk.LEFT, padx=8, pady=2)
-
+        ttk.Button(btn_frame, text="Group by Company", command=self.show_grouped_by_company).pack(side=tk.LEFT, padx=8, pady=2)
         # --- TREEVIEW FRAME WITH SCROLLBAR ---
         tree_frame = tk.Frame(self, bg="#23272e")
         tree_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=8)
         columns = ("name", "email", "phone", "company")
         self.tree = ttk.Treeview(tree_frame, columns=columns, show="headings", selectmode="browse")
         for col in columns:
-            self.tree.heading(col, text=col.capitalize())
+            if col == "name":
+                self.tree.heading(col, text=col.capitalize(), command=self.sort_by_name)
+            else:
+                self.tree.heading(col, text=col.capitalize())
             self.tree.column(col, width=200, anchor=tk.W, stretch=True)
         vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=vsb.set)
@@ -84,6 +88,45 @@ class CRMApp(tk.Tk):
     def set_status(self, msg):
         self.status.config(text=msg)
 
+    def sort_by_name(self):
+        by_name = analysis.name_alphabetic()
+        for row in self.tree.get_children():
+            self.tree.delete(row)
+        for rec in by_name:
+            guid = rec.get("guid", "")
+            self.tree.insert("", tk.END, iid=guid, values=(
+                rec.get("name", ""),
+                rec.get("email", ""),
+                rec.get("phone", ""),
+                rec.get("company", "")
+            ))
+        self.set_status("Contacts sorted by name.")
+
+    def show_grouped_by_company(self):
+        grouped = analysis.group_by_company()  # This returns a dict: {company: [contacts]}
+        
+        group_win = tk.Toplevel(self)
+        group_win.title("People Grouped by Company")
+        group_win.geometry("600x400")
+        group_win.configure(bg="#23272e")
+
+        tree = ttk.Treeview(group_win, columns=("name", "email", "phone"), show="headings")
+        tree.heading("name", text="Name")
+        tree.heading("email", text="Email")
+        tree.heading("phone", text="Phone")
+        tree.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Insert grouped data
+        for company, people in grouped.items():
+            # Insert a heading row for the company
+            tree.insert("", "end", values=(f"--- {company} ---", "", ""))
+            for person in people:
+                tree.insert("", "end", values=(
+                    person.get("name", ""),
+                    person.get("email", ""),
+                    person.get("phone", "")
+                ))
+        
     def refresh_contacts(self):
         for row in self.tree.get_children():
             self.tree.delete(row)

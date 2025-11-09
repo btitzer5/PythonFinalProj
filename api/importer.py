@@ -1,6 +1,7 @@
 import requests
 import json
 from models.contact import Contact
+import random
 
 def fetch_random_users(n=5):
     url = f'https://randomuser.me/api/?results={n}'
@@ -12,10 +13,29 @@ def fetch_random_users(n=5):
         name = f"{user['name']['first']} {user['name']['last']}"
         email = user['email']
         phone = user['phone']
-        company = user['location']['city']  # Using city as a placeholder for company
+        company = assign_company()
         contact = Contact(name, email, phone, company)
         contacts.append(contact)
     return contacts
+
+def assign_company():
+    commpanies = {
+        1 : 'Google',
+        2 : 'Microsoft',
+        3 : 'Apple',
+        4 : 'Amazon',
+        5 : 'Facebook',
+        6 : 'Tesla',
+        7 : 'Netflix',
+        8 : 'IBM',
+        9 : 'Intel',
+        10 : 'Cisco'
+    }
+    x = random.randint(1, 10)
+    return commpanies[x]
+
+
+
 
 # def save_data(contacts, filename='data/contacts.json'):
 #     with open(filename, 'w') as f:
