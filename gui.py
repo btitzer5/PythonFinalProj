@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
+from PIL import Image, ImageTk  # Add this import
 from core import ops
 from models.contact import Contact
 from core import analysis
@@ -82,6 +83,19 @@ class CRMApp(tk.Tk):
         # --- STATUS BAR ---
         self.status = tk.Label(self, text="", anchor="w", bg="#282a36", fg="#f8f8f2", font=("Segoe UI", 10))
         self.status.pack(fill=tk.X, padx=10, pady=(0, 5))
+
+        # --- Chart Button ---
+        chart_btn = ttk.Button(self, text="Generate & Show Charts", command=self.show_charts)
+        chart_btn.pack(pady=10)
+
+        # --- Chart Images Frame (side by side) ---
+        charts_frame = tk.Frame(self, bg="#23272e")
+        charts_frame.pack(pady=5)
+
+        self.bar_img_label = tk.Label(charts_frame, bg="#23272e")
+        self.bar_img_label.pack(side=tk.LEFT, padx=10)
+        self.pie_img_label = tk.Label(charts_frame, bg="#23272e")
+        self.pie_img_label.pack(side=tk.LEFT, padx=10)
 
         self.refresh_contacts()
 
@@ -209,6 +223,23 @@ class CRMApp(tk.Tk):
             ops.clear_records()
             self.refresh_contacts()
             self.set_status("All contacts cleared.")
+
+    def show_charts(self):
+        from core.charts import contacts_chart, deals_chart
+        contacts_chart()
+        deals_chart()
+        # Load and display bar chart
+        bar_img = Image.open("static/contacts_bar.png")
+        bar_img = bar_img.resize((400, 300))
+        self.bar_photo = ImageTk.PhotoImage(bar_img)
+        self.bar_img_label.config(image=self.bar_photo)
+        self.bar_img_label.image = self.bar_photo
+        # Load and display pie chart
+        pie_img = Image.open("static/contacts_pie.png")
+        pie_img = pie_img.resize((300, 300))
+        self.pie_photo = ImageTk.PhotoImage(pie_img)
+        self.pie_img_label.config(image=self.pie_photo)
+        self.pie_img_label.image = self.pie_photo
 
 if __name__ == "__main__":
     app = CRMApp()

@@ -12,6 +12,12 @@ def search(query):
 def _import(users=5):
     ops.import_records(int(users))
 
+def charts():
+    from core.charts import contacts_chart, deals_chart
+    contacts_chart()
+    deals_chart()
+    print("Charts saved to /static")
+
 def __repl__ ():
     while True:
         cmd = input("Enter command (add, list, search <query>, import <n>, exit): ")
@@ -33,6 +39,8 @@ def __repl__ ():
         elif action == 'search' and len(parts) > 1:
             query = ' '.join(parts[1:])
             search(query)
+        elif action == 'charts':
+            charts()
         elif action == 'import' and len(parts) > 1:
             print(len(parts))
             print(parts[1])
